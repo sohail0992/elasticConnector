@@ -1,0 +1,17 @@
+{
+  "name": "elastic-connector",
+  "version": "1.0.0",
+  "description": "write database transaction to elastic within change stream event",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "msohail01",
+  "license": "MIT",
+  "dependencies": {
+    "elasticsearch": "^16.7.2",
+    "mongodb": "^3.6.6"
+  },
+  "devDependencies": {}
+}
