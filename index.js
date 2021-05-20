@@ -19,10 +19,8 @@ function getElasticConnection(url) {
   return elkClient;
 }
 
-async function watch(uri, db, collectoinToWatch) {
+async function watch(db, collectoinToWatch) {
   try {
-    client = client ? client : await getMongoClient(uri);
-    await client.connect();
     const database = client.db(db);
     const collection = database.collection(collectoinToWatch);
     return collection.watch({fullDoucment: 'updateLookup'})
@@ -31,11 +29,13 @@ async function watch(uri, db, collectoinToWatch) {
   }
 }
 
-async function watchCollections(collections) {
+async function watchCollections(collections, mongoUrl) {
   let watcher = [];
+  client = client ? client : await getMongoClient(mongoUrl);
+  await client.connect();
   for await (collection of collections) {
     watcher.push({
-      watcher: await watch(collection.mongoUrl, collection.db , collection.name),
+      watcher: await watch(collection.db , collection.name),
       query: collection.query,
       index: collection.index,
       docType: collection.docType,
@@ -92,26 +92,25 @@ module.exports = {
   watchCollections
 };
 
-// watchCollections([{
-//   name: 'changeDetactions',
-//   mongoUrl: 'mongodb://127.0.0.1:27017',
-//   elkUrl: '',
-//   index: '',
-//   query: null,
-//   docType: null,
-//   id: '_id',
-//   db: 'watcher',
-//   func: [callIt, donot]
-// }])
+watchCollections([{
+  name: 'changeDetactions',
+  elkUrl: '',
+  index: '',
+  query: null,
+  docType: null,
+  id: '_id',
+  db: 'watcher',
+  func: [callIt, donot]
+}], 'mongodb://127.0.0.1:27017')
 
 
-// function callIt(doc) {
-//   console.log(doc, 'kk')
-// }
+function callIt(doc) {
+  console.log(doc, 'kk')
+}
 
-// function donot(doc) {
-//   console.log(doc, 'kk')
-// }
+function donot(doc) {
+  console.log(doc, 'kk')
+}
 // three functions
 // watch db and collections 
 // create a watchers array
