@@ -2,8 +2,8 @@ const { MongoClient } = require("mongodb");
 // Replace the uri string with your MongoDB deployment's connection string.
 let elkClient = null;
 let client = null;
-function getMongoClient(uri) {
-  client = new MongoClient(uri, {
+async function getMongoClient(uri) {
+  client = await new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -94,6 +94,16 @@ module.exports = {
 
 watchCollections([{
   name: 'changeDetactions',
+  elkUrl: '',
+  index: '',
+  query: null,
+  docType: null,
+  id: '_id',
+  db: 'watcher',
+  func: [callIt, donot]
+}, 
+{
+  name: 'changes',
   elkUrl: '',
   index: '',
   query: null,
