@@ -3,11 +3,10 @@ const { MongoClient } = require("mongodb");
 let elkClient = null;
 let client = null;
 async function getMongoClient(uri) {
-  client = await new MongoClient(uri, {
+  return new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  return client
 }
 
 function getElasticConnection(url) {

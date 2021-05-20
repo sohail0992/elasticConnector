@@ -1,6 +1,6 @@
 {
   "name": "@msohail01/elastic-connector",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "write database transaction to elastic within change stream event",
   "main": "index.js",
   "scripts": {
