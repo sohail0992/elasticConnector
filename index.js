@@ -25,7 +25,7 @@ async function watch(uri, db, collectoinToWatch) {
     await client.connect();
     const database = client.db(db);
     const collection = database.collection(collectoinToWatch);
-    return collection.watch()
+    return collection.watch({fullDoucment: 'updateLookup'})
   } catch (err) {
     console.error(err)
   }
@@ -53,30 +53,36 @@ async function watchCollections(collections) {
 }
 
 async function reStructure(document, query = null, index = null, docType, id = null, func = null,elkUrl = '') {
-  const fullDoucment = document.fullDocument;
-  if (!id) {
-    id = Object.keys(document.documentKey)[0];
-  }
-  if (typeof fullDoucment[id] !== 'string') {
-    fullDoucment[id] = fullDoucment[id].toString();
-  } 
-  const obj = {
-    index: index,
-    type: docType,
-    id: fullDoucment[id],
-    body: fullDoucment
-  };
-  if (index && elkUrl) {
-    elkClient = elkClient ? elkClient : getElasticConnection(elkUrl);
-    try {
-      const response = await elkClient.update(obj);
-      console.log(response, '')
-    } catch (error) {
-      console.error('elastic indexing error', JSON.stringify(error));
+  try {
+    const fullDoucment = document.fullDocument ? document.fullDocument : document.documentKey;
+    if (!id) {
+      id = Object.keys(document.documentKey)[0];
     }
-  }
-  if (func) {
-    func(obj);
+    if (typeof fullDoucment[id] !== 'string') {
+      fullDoucment[id] = fullDoucment[id].toString();
+    } 
+    const obj = {
+      index: index,
+      type: docType,
+      id: fullDoucment[id],
+      body: fullDoucment
+    };
+    if (index && elkUrl) {
+      elkClient = elkClient ? elkClient : getElasticConnection(elkUrl);
+      try {
+        const response = await elkClient.update(obj);
+        console.log(response, '')
+      } catch (error) {
+        console.error('elastic indexing error', JSON.stringify(error));
+      }
+    }
+    if (func && func.length > 0) {
+      func.forEach(each => {
+        each(obj)
+      })
+    }
+  } catch (error) {
+    console.error('got error while restructuring document', JSON.stringify(error));
   }
 }
 
@@ -95,7 +101,7 @@ module.exports = {
 //   docType: null,
 //   id: '_id',
 //   db: 'watcher',
-//   func: callIt
+//   func: [callIt, donot]
 // }])
 
 
@@ -103,6 +109,9 @@ module.exports = {
 //   console.log(doc, 'kk')
 // }
 
+// function donot(doc) {
+//   console.log(doc, 'kk')
+// }
 // three functions
 // watch db and collections 
 // create a watchers array

@@ -1,6 +1,6 @@
 {
-  "name": "elastic-connector",
-  "version": "1.0.0",
+  "name": "@msohail01/elastic-connector",
+  "version": "1.0.1",
   "description": "write database transaction to elastic within change stream event",
   "main": "index.js",
   "scripts": {
@@ -13,5 +13,13 @@
     "elasticsearch": "^16.7.2",
     "mongodb": "^3.6.6"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sohail0992/elasticConnector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sohail0992/elasticConnector/issues"
+  },
+  "homepage": "https://github.com/sohail0992/elasticConnector#readme"
 }
